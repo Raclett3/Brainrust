@@ -29,5 +29,8 @@ fn main() {
             }
         };
         println!("{}", execute(&tree, 16384, input));
+    } else {
+        eprintln!("You must specify the filename");
+        std::process::exit(1);
     }
 }
