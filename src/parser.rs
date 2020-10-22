@@ -1,7 +1,7 @@
 use std::iter::Iterator;
 
 #[derive(Debug, PartialEq, Eq)]
-pub enum InstructionTypes {
+pub enum Instruction {
     Increment,
     Decrement,
     PointerIncrement,
@@ -10,8 +10,6 @@ pub enum InstructionTypes {
     PutChar,
     While(SyntaxTree),
 }
-
-pub type Instruction = (usize, InstructionTypes);
 
 type SyntaxTree = Vec<Instruction>;
 
@@ -29,16 +27,16 @@ fn parse_from_iter<T: Iterator<Item = (usize, char)>>(
                     return Err(format!("Unexpected ']' at {}", index));
                 }
             }
-            '[' => InstructionTypes::While(parse_from_iter(iter, true)?),
-            '+' => InstructionTypes::Increment,
-            '-' => InstructionTypes::Decrement,
-            '>' => InstructionTypes::PointerIncrement,
-            '<' => InstructionTypes::PointerDecrement,
-            '.' => InstructionTypes::PutChar,
-            ',' => InstructionTypes::GetChar,
+            '[' => Instruction::While(parse_from_iter(iter, true)?),
+            '+' => Instruction::Increment,
+            '-' => Instruction::Decrement,
+            '>' => Instruction::PointerIncrement,
+            '<' => Instruction::PointerDecrement,
+            '.' => Instruction::PutChar,
+            ',' => Instruction::GetChar,
             _ => continue,
         };
-        tree.push((index, inst));
+        tree.push(inst);
     }
     if is_inside {
         Err("Unexpected EOF".to_string())

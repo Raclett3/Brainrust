@@ -1,4 +1,4 @@
-use crate::parser::{Instruction, InstructionTypes};
+use crate::parser::Instruction;
 use std::iter::Iterator;
 
 struct State {
@@ -40,15 +40,15 @@ fn process_instructions<T: Iterator<Item = u8>>(
     state: &mut State,
     stdin: &mut T,
 ) {
-    for (_, inst) in tree {
+    for inst in tree {
         match &inst {
-            InstructionTypes::Increment => state.increment(),
-            InstructionTypes::Decrement => state.decrement(),
-            InstructionTypes::PointerIncrement => state.ptr_increment(),
-            InstructionTypes::PointerDecrement => state.ptr_decrement(),
-            InstructionTypes::GetChar => state.set(stdin.next().unwrap_or(0)),
-            InstructionTypes::PutChar => result.push(state.get()),
-            InstructionTypes::While(inside) => {
+            Instruction::Increment => state.increment(),
+            Instruction::Decrement => state.decrement(),
+            Instruction::PointerIncrement => state.ptr_increment(),
+            Instruction::PointerDecrement => state.ptr_decrement(),
+            Instruction::GetChar => state.set(stdin.next().unwrap_or(0)),
+            Instruction::PutChar => result.push(state.get()),
+            Instruction::While(inside) => {
                 while state.get() != 0 {
                     process_instructions(inside, result, state, stdin);
                 }
